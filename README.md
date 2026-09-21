@@ -1,194 +1,245 @@
-# 🐹 Tole
+# Tole
 
 <p align="center">
-  <em>All-in-one Windows system maintenance, deep cleaning, and optimization toolkit.</em>
+  <strong>Windows maintenance toolkit for cleanup, optimization, disk analysis, and app removal.</strong>
   <br />
-  <strong>Inspired by <a href="https://github.com/tw93/mole">Mole for macOS</a>, crafted natively for Windows in Pure Go.</strong>
-  <br />
-  <sub>Dev by <strong>agushariyanto</strong></sub>
+  <sub>Native Go CLI for Windows power users.</sub>
+  <br /><br />
+  <a href="https://github.com/idharian/Tole/releases"><img src="https://img.shields.io/badge/version-v1.5.0-34D399?style=flat-square" alt="Version 1.5.0"></a>
+  <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go 1.26"></a>
+  <a href="https://github.com/idharian/Tole/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-94A3B8?style=flat-square" alt="MIT License"></a>
+  <a href="https://github.com/idharian/Tole"><img src="https://img.shields.io/github/stars/idharian/Tole?style=flat-square" alt="GitHub stars"></a>
 </p>
 
----
+Tole is an all-in-one Windows system maintenance CLI. It scans disposable files, removes stale project artifacts, analyzes disk usage, monitors hardware, and handles application leftovers through a focused terminal interface.
 
-## ✨ Features
+Inspired by [Mole for macOS](https://github.com/tw93/mole), built natively for Windows in Go.
 
-- **⚡ Blazing Fast Single Binary**: Ditulis murni dalam bahasa **Go** dengan integrasi langsung ke Win32 API. Tidak memerlukan runtime PowerShell yang lambat atau dependensi eksternal.
-- **🎨 Modern Terminal Aesthetics**: Menggunakan styling TUI **Charmbracelet** (`lipgloss`, `bubbletea`, `huh`) dengan visual modern dan responsif.
-- **🧹 Deep Clean (`tole clean`)**:
-  - **User Essentials**: `%TEMP%`, Windows Error Reporting, Crash Dumps, dan Windows Recycle Bin.
-  - **Browsers**: Google Chrome, Microsoft Edge, Brave Browser, dan Mozilla Firefox cache.
-  - **Developer Tools**: npm cache, pnpm store, Yarn cache, Python pip cache, Go build cache, Rust Cargo cache, dan NuGet cache.
-  - **System Caches** *(dengan hak Administrator)*: `C:\Windows\Temp`, Windows Prefetch, dan Windows Update download cache (`SoftwareDistribution\Download`).
-- **📦 Project Build Purge (`tole purge`)**:
-  - Memindai folder proyek developer untuk mencari direktori gemuk seperti `node_modules`, `target`, `.gradle`, `bin`/`obj`, `.venv`, `dist`, `.next`.
-- **🛡️ Safety First**:
-  - Dukungan penuh flag `--dry-run` di setiap perintah untuk melihat preview kalkulasi ruang sebelum dihapus.
-  - Menangani *sharing violations* / file locking secara aman tanpa crash.
-  - Integrasi native Recycle Bin Win32 (`SHEmptyRecycleBinW`).
-- **🎯 Interactive CLI Menu**: Cukup ketik `tole` tanpa argumen untuk menampilkan menu pilihan interaktif.
+## Features
 
----
+- **Deep cleanup**: user temp files, crash dumps, browser caches, developer caches, Windows Update cache, Prefetch, and Recycle Bin.
+- **Project purge**: finds heavy artifacts such as `node_modules`, `target`, `.gradle`, `bin`, `obj`, `.venv`, `dist`, and `.next`.
+- **Disk analyzer**: interactive folder size explorer with keyboard navigation.
+- **System optimizer**: DNS flush, icon cache maintenance, memory trimming, DISM cleanup, and SSD TRIM where supported.
+- **Smart uninstaller**: reads installed Windows applications and searches common leftover locations.
+- **Live monitor**: CPU, RAM, disk, uptime, and system context dashboard.
+- **Installer cleaner**: finds old `.msi`, setup `.exe`, `.iso`, and related packages in Downloads and Desktop.
+- **Safe workflow**: dry-run previews, confirmation prompts, Recycle Bin support where appropriate, and locked-file handling.
+- **Native Windows binary**: no runtime dependency after installation.
 
-## 🚀 Instalasi Cepat (One-Click Install)
+## Requirements
 
-Untuk memasang Tole secara permanen ke sistem Windows Anda agar dapat dipanggil dari folder mana saja:
+- Windows 10 or Windows 11.
+- Go 1.26+ only when building from source.
+- Administrator terminal for system-level cleanup and optimization tasks.
+
+## Install
+
+### Download a release
+
+Download the latest Windows binary from [Releases](https://github.com/idharian/Tole/releases), then place `tole.exe` in a directory included in your `PATH`.
+
+### Install from source
 
 ```powershell
-# Jalankan skrip instalasi otomatis
+git clone https://github.com/idharian/Tole.git
+cd Tole
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
-*Skrip ini menyalin `tole.exe` ke `%LOCALAPPDATA%\Tole` dan otomatis mendaftarkannya ke variabel Environment `PATH` Windows.*
 
-> Setelah instalasi, buka jendela terminal baru (PowerShell atau Command Prompt) dan Anda bisa langsung mengetik `tole` dari direktori manapun!
+The installer copies `tole.exe` to `%LOCALAPPDATA%\Tole` and adds that directory to the user `PATH`. Open a new terminal after installation.
 
-Untuk menghapus Tole dari sistem:
-```powershell
-powershell -ExecutionPolicy Bypass -File .\uninstall.ps1
-```
+Verify:
 
----
-
-## 📖 Panduan Penggunaan Lengkap
-
-### 1. Menu Interaktif (Default)
-Jika Anda hanya mengetik `tole` tanpa argumen tambahan, Tole akan menampilkan menu seleksi interaktif yang ramah pengguna:
 ```powershell
 tole
 ```
 
-### 2. Deep Cleaning (`tole clean`)
-Membersihkan cache sementara, browser, dan developer tools:
-```powershell
-# Pratinjau kalkulasi tanpa menghapus berkas (Sangat Disarankan pertama kali)
-tole clean --dry-run
+Uninstall the installed binary and remove its `PATH` entry:
 
-# Melakukan pembersihan menyeluruh
+```powershell
+powershell -ExecutionPolicy Bypass -File .\uninstall.ps1
+```
+
+## Usage
+
+### Interactive menu
+
+```powershell
+tole
+```
+
+### Clean system caches
+
+Preview first:
+
+```powershell
+tole clean --dry-run
+```
+
+Execute cleanup:
+
+```powershell
 tole clean
 ```
 
-### 3. Pembersih Build Artifact Proyek (`tole purge`)
-Memindai folder proyek developer untuk membersihkan `node_modules`, `target`, `.gradle`, dll.:
+### Purge project artifacts
+
+Preview a project tree:
+
 ```powershell
-# Scan folder proyek Anda (simulasi)
 tole purge --path "D:\Projects" --dry-run
+```
 
-# Scan dan hapus dengan konfirmasi interaktif
+Scan and confirm interactively:
+
+```powershell
 tole purge --path "D:\Projects"
+```
 
-# Otomatis konfirmasi penghapusan tanpa prompt
+Skip confirmation:
+
+```powershell
 tole purge --path "D:\Projects" --yes
 ```
 
-### 4. Visualizer Ruang Disk Interaktif (`tole analyze`)
-Melihat folder yang paling memakan ruang disk di terminal (seperti DaisyDisk / WizTree):
+### Analyze disk usage
+
 ```powershell
-# Menganalisis folder kerja saat ini
 tole analyze
 
-# Menganalisis folder tertentu (misal: Downloads atau Drive D:)
 tole analyze "C:\Users\musam\Downloads"
 tole analyze "D:\"
 ```
-*Gunakan tombol panah `↑`/`↓` untuk memilih, `Enter` untuk masuk folder, `Esc` untuk kembali, `d` untuk membuang ke Recycle Bin, dan `q` untuk keluar.*
 
-### 5. Optimasi Sistem Windows (`tole optimize`)
-Membersihkan cache DNS, mereset icon cache yang rusak, dan memangkas memori standby RAM:
+Keys: `Up` / `Down` navigate, `Enter` open, `Esc` go to parent, `d` move selection to Recycle Bin, `q` exit.
+
+### Optimize Windows
+
+Preview:
+
 ```powershell
-# Simulasi pratinjau optimasi
 tole optimize --dry-run
+```
 
-# Eksekusi pemeliharaan sistem
+Run maintenance:
+
+```powershell
 tole optimize
 ```
-*(Buka terminal sebagai Administrator untuk membuka fitur tambahan pembersihan DISM dan SSD TRIM).*
 
-### 6. Uninstaller Pintar & Pembersih Sisa (`tole uninstall`)
-Mencopot aplikasi sekaligus membersihkan berkas yang tertinggal di AppData/ProgramData:
+Run PowerShell as Administrator to enable system-level tasks such as DISM cleanup and SSD TRIM.
+
+### Uninstall applications
+
+List installed applications:
+
 ```powershell
-# Menampilkan seluruh daftar software terinstal
 tole uninstall --list
+```
 
-# Mencari aplikasi tertentu berdasarkan nama
+Search by application name:
+
+```powershell
 tole uninstall --search "photoshop"
+```
 
-# Membuka menu uninstaller interaktif
+Open interactive uninstaller:
+
+```powershell
 tole uninstall
 ```
 
-### 7. Pemantau Hardware Live (`tole status`)
-Dashboard pemantau CPU, RAM, dan Disk secara real-time:
+### Monitor hardware
+
 ```powershell
 tole status
 ```
-*(Tekan `q` untuk keluar).*
 
-### 8. Pembersih File Installer Lama (`tole installer`)
-Mencari berkas `.msi`, `.exe` setup, dan `.iso` yang terlupakan di folder Downloads:
+Press `q` or `Esc` to exit.
+
+### Clean old installer files
+
+Preview:
+
 ```powershell
-# Pratinjau file installer yang ditemukan
 tole installer --dry-run
+```
 
-# Scan dan pindahkan ke Recycle Bin
+Move selected installer packages to Recycle Bin:
+
+```powershell
 tole installer
 ```
 
-### 9. Pembaruan Versi Otomatis (`tole update`)
-Memperbarui Tole ke versi kompilasi terbaru secara instan:
+### Update from source
+
+Run from the cloned repository:
+
 ```powershell
+cd Tole
 tole update
 ```
 
----
+This pulls the latest Git changes, rebuilds the binary, and refreshes `%LOCALAPPDATA%\Tole`.
 
-## 📋 Daftar Perintah
+## Command reference
 
-| Perintah | Deskripsi | Status |
-| :--- | :--- | :---: |
-| `tole` | Menu interaktif TUI | ✅ Tersedia |
-| `tole clean` | Membersihkan cache sistem, browser, developer tools, dan Recycle Bin | ✅ Tersedia |
-| `tole purge` | Mencari dan membersihkan build artifacts (`node_modules`, `target`, dll.) | ✅ Tersedia |
-| `tole analyze` | Disk space visualizer interaktif (DaisyDisk / WizTree style TUI) | ✅ Tersedia |
-| `tole optimize` | Perbaikan sistem: Flush DNS, trim RAM, icon cache rebuild | ✅ Tersedia |
-| `tole uninstall` | Smart uninstaller dengan pembersih berkas sisa (leftover cleaner) | ✅ Tersedia |
-| `tole status` | Dashboard pemantau hardware live (CPU, GPU, RAM, Disk, Network) | ✅ Tersedia |
-| `tole installer` | Pembersih file installer `.msi`, `.exe`, `.iso` usang di folder Downloads | ✅ Tersedia |
-| `tole update` | Memperbarui instalasi Tole ke build terbaru secara otomatis | ✅ Tersedia |
+| Command | Purpose |
+| --- | --- |
+| `tole` | Open interactive menu |
+| `tole clean` | Clean Windows, browser, and developer caches |
+| `tole purge` | Find and remove project build artifacts |
+| `tole analyze` | Explore disk usage interactively |
+| `tole optimize` | Run Windows maintenance tasks |
+| `tole uninstall` | Remove applications and leftovers |
+| `tole status` | Show live CPU, RAM, and disk stats |
+| `tole installer` | Find old installer packages |
+| `tole update` | Pull, rebuild, and reinstall from source |
 
----
+Most destructive commands support `--dry-run`. Use it before cleanup on an unfamiliar machine.
 
-## 🏗️ Struktur Proyek
+## Development
 
+Clone the repository and run tests:
+
+```powershell
+git clone https://github.com/idharian/Tole.git
+cd Tole
+go test ./...
+go build ./...
 ```
+
+Build a Windows release binary:
+
+```powershell
+go build -ldflags="-s -w" -o tole.exe ./cmd/tole
+```
+
+Project layout:
+
+```text
 Tole/
-├── cmd/
-│   └── tole/               # CLI Entrypoint & Commands (Cobra)
-│       ├── main.go         # Entry point
-│       ├── root.go         # Interactive menu default (dry-run + confirm guard)
-│       ├── clean.go        # tole clean & --dry-run (permanent delete warning)
-│       ├── purge.go        # tole purge & scanner (sorted results)
-│       ├── analyze.go      # tole analyze (Bubble Tea disk visualizer)
-│       ├── optimize.go     # tole optimize & --dry-run
-│       ├── uninstall.go    # tole uninstall (validated index, --list/--search)
-│       ├── status.go       # tole status (live monitor)
-│       ├── installer.go    # tole installer & --dry-run
-│       └── update.go       # tole update (source-channel rebuild)
-├── pkg/
-│   ├── ui/                 # Styling Lipgloss, ASCII Banner, Spinner, Formatter
-│   ├── winapi/             # Win32 APIs (Recycle Bin, Disk Space, Elevation, Paths)
-│   ├── cleaner/            # Scanner & Engine Pembersih Cache
-│   ├── purge/              # Engine Scanner Build Artifacts
-│   ├── analyzer/           # Disk scanner + Bubble Tea TUI model
-│   ├── optimizer/          # DNS flush, icon cache, RAM trim, DISM, TRIM
-│   ├── uninstaller/        # Registry reader + strict leftover matcher
-│   ├── installer/          # Downloads/Desktop installer scanner (recursive)
-│   ├── monitor/            # CPU/RAM/Disk telemetry + TUI dashboard
-│   └── version/            # CurrentVersion constant
-├── go.mod
-└── README.md
+├── cmd/tole/       CLI commands and entrypoint
+├── pkg/cleaner/    cache scanning and cleanup
+├── pkg/purge/      project artifact scanner
+├── pkg/analyzer/   disk analyzer TUI
+├── pkg/optimizer/  Windows maintenance tasks
+├── pkg/uninstaller registry and leftover cleanup
+├── pkg/installer/  installer package scanner
+├── pkg/monitor/    live hardware monitor
+├── pkg/ui/         Lipgloss theme, banner, spinner, summaries
+├── pkg/winapi/     native Windows APIs
+├── install.ps1     installer script
+└── uninstall.ps1   uninstaller script
 ```
 
----
+## Safety
 
-## 📄 Lisensi
+Tole can permanently delete files during `tole clean`. Preview with `--dry-run` first. Close applications before cleaning their caches. Run elevated commands only when you understand the requested operation.
 
-MIT License. Bebas digunakan dan dikembangkan lebih lanjut.
+## License
+
+MIT License. See [LICENSE](https://github.com/idharian/Tole/blob/main/LICENSE).
+
+Maintained by [agushariyanto](https://github.com/idharian).
