@@ -172,16 +172,33 @@ Move selected installer packages to Recycle Bin:
 tole installer
 ```
 
-### Update from source
+### Update otomatis dari GitHub Releases
 
-Run from the cloned repository:
+Dari instalasi mana pun, jalankan:
 
 ```powershell
-cd Tole
 tole update
 ```
 
-This pulls the latest Git changes, rebuilds the binary, and refreshes `%LOCALAPPDATA%\Tole`.
+Tole akan mengambil release terbaru dari `idharian/Tole`, membandingkan versi, mengunduh `tole-windows-amd64.exe`, memverifikasi `SHA256SUMS`, lalu mengganti binary di `%LOCALAPPDATA%\Tole`. Tidak perlu masuk folder source, `git`, atau Go.
+
+Release baru dibuat otomatis saat maintainer push tag versi:
+
+```powershell
+git tag v1.6.0
+git push origin v1.6.0
+```
+
+### Update dari source repository
+
+Untuk build dari source secara manual:
+
+```powershell
+cd Tole
+git pull
+go build -o .\tole.exe .\cmd\tole
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
 
 ## Command reference
 
