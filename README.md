@@ -20,6 +20,7 @@ Inspired by [Mole for macOS](https://github.com/tw93/mole), built natively for W
 - **Deep cleanup**: user temp files, crash dumps, browser caches, developer caches, Windows Update cache, Prefetch, and Recycle Bin.
 - **Project purge**: finds heavy artifacts such as `node_modules`, `target`, `.gradle`, `bin`, `obj`, `.venv`, `dist`, and `.next`.
 - **Disk analyzer**: interactive folder size explorer with keyboard navigation.
+- **Large file finder**: top-N biggest files under a path, with Recycle Bin removal.
 - **System optimizer**: DNS flush, icon cache maintenance, memory trimming, DISM cleanup, and SSD TRIM where supported.
 - **Smart uninstaller**: reads installed Windows applications and searches common leftover locations.
 - **Live monitor**: CPU, RAM, disk, uptime, and system context dashboard.
@@ -113,6 +114,21 @@ tole analyze "D:\"
 ```
 
 Keys: `Up` / `Down` navigate, `Enter` open, `Esc` go to parent, `d` move selection to Recycle Bin, `q` exit.
+
+### Find the largest files
+
+Preview the biggest files under a path:
+
+```powershell
+tole large --dry-run
+tole large "D:\Projects" --min 500MB --top 50
+```
+
+Move them to Recycle Bin (recoverable):
+
+```powershell
+tole large "D:\Projects"
+```
 
 ### Optimize Windows
 
@@ -208,6 +224,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 | `tole clean` | Clean Windows, browser, and developer caches |
 | `tole purge` | Find and remove project build artifacts |
 | `tole analyze` | Explore disk usage interactively |
+| `tole large` | Find and remove the largest files |
 | `tole optimize` | Run Windows maintenance tasks |
 | `tole uninstall` | Remove applications and leftovers |
 | `tole status` | Show live CPU, RAM, and disk stats |
@@ -244,6 +261,7 @@ Tole/
 ├── pkg/optimizer/  Windows maintenance tasks
 ├── pkg/uninstaller registry and leftover cleanup
 ├── pkg/installer/  installer package scanner
+├── pkg/largefiles/ large file finder
 ├── pkg/monitor/    live hardware monitor
 ├── pkg/ui/         Lipgloss theme, banner, spinner, summaries
 ├── pkg/winapi/     native Windows APIs

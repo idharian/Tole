@@ -236,6 +236,12 @@ $old = "$Target.old"
 Remove-Item -LiteralPath $old -Force -ErrorAction SilentlyContinue
 Move-Item -LiteralPath $Target -Destination $old -Force -ErrorAction SilentlyContinue
 Move-Item -LiteralPath $Source -Destination $Target -Force
+$null = & $Target version 2>$null
+if ($LASTEXITCODE -eq 0) {
+    Remove-Item -LiteralPath $old -Force -ErrorAction SilentlyContinue
+} else {
+    Copy-Item -LiteralPath $old -Destination $Target -Force -ErrorAction SilentlyContinue
+}
 Start-Process -FilePath $Target
 Remove-Item -LiteralPath $Script -Force -ErrorAction SilentlyContinue`
 

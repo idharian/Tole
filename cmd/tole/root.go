@@ -39,6 +39,7 @@ func runInteractiveMenu(cmd *cobra.Command, args []string) {
 						huh.NewOption("Maintain / Smart Uninstall — apps + leftovers", "uninstall"),
 						huh.NewOption("Reclaim / Project Purge — node_modules, target, .venv", "purge"),
 						huh.NewOption("Reclaim / Disk Analyzer — visual explorer", "analyze"),
+						huh.NewOption("Reclaim / Large File Finder — biggest files, one list", "large"),
 						huh.NewOption("Reclaim / Installer Cleaner — .msi, .exe, .iso", "installer"),
 						huh.NewOption("System / Live Monitor — CPU, RAM, disk", "status"),
 						huh.NewOption("System / Update Tole", "update"),
@@ -132,6 +133,27 @@ func runInteractiveMenu(cmd *cobra.Command, args []string) {
 		case "installer":
 			fmt.Print("\033[H\033[2J")
 			runInstaller(installerCmd, nil)
+			ui.WaitEnter("Tekan [Enter] untuk kembali ke menu utama...")
+
+		case "large":
+			fmt.Print("\033[H\033[2J")
+			prevLargeDry, prevLargeTop := largeDryRun, largeTop
+			largeDryRun = true
+			runLarge(largeCmd, nil)
+			var proceedLarge bool
+			huh.NewConfirm().
+				Title("Hasil di atas adalah PREVIEW. Pindahkan file ke Recycle Bin?").
+				Description("File dipindah ke Recycle Bin, masih bisa dipulihkan.").
+				Affirmative("Ya, pindahkan").
+				Negative("Batal").
+				Value(&proceedLarge).
+				Run()
+			if proceedLarge {
+				largeDryRun = false
+				fmt.Print("\033[H\033[2J")
+				runLarge(largeCmd, nil)
+			}
+			largeDryRun, largeTop = prevLargeDry, prevLargeTop
 			ui.WaitEnter("Tekan [Enter] untuk kembali ke menu utama...")
 
 		case "update":
