@@ -5,7 +5,7 @@
   <br />
   <sub>CLI native Go untuk power user Windows.</sub>
   <br /><br />
-  <a href="https://github.com/idharian/Tole/releases"><img src="https://img.shields.io/badge/versi-v1.5.0-34D399?style=flat-square" alt="Versi 1.5.0"></a>
+  <a href="https://github.com/idharian/Tole/releases"><img src="https://img.shields.io/badge/versi-v1.6.0-34D399?style=flat-square" alt="Versi 1.6.0"></a>
   <a href="https://go.dev/"><img src="https://img.shields.io/badge/Go-1.26-00ADD8?style=flat-square&logo=go&logoColor=white" alt="Go 1.26"></a>
   <a href="https://github.com/idharian/Tole/blob/main/LICENSE"><img src="https://img.shields.io/badge/lisensi-MIT-94A3B8?style=flat-square" alt="Lisensi MIT"></a>
   <a href="https://github.com/idharian/Tole"><img src="https://img.shields.io/github/stars/idharian/Tole?style=flat-square" alt="GitHub stars"></a>
